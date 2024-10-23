@@ -42,6 +42,10 @@ public abstract class DoubleExtension implements Arithmetic<Double> {
   {
     return Math.log(thiz);
   }
+  public static boolean lt(@This Double thiz, Double other){return thiz<other;}
+  public static boolean le(@This Double thiz, Double other){return thiz<=other;}
+  public static boolean gt(@This Double thiz, Double other){return thiz>other;}
+  public static boolean ge(@This Double thiz, Double other){return thiz>=other;}
 
 
 }

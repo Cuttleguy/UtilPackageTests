@@ -6,64 +6,68 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Complex implements ComparableUsing<Complex> {
-    public double real;
-    public double imag;
-    public static final Complex i = new Complex(0.0,1.0);
-    public static final Complex one = new Complex(1.0,0.0);
-    public static final Complex zero = new Complex(0.0,0.0);
-    public static final Complex half = new Complex(0.5,0.0);
-    public Complex(double newReal) {
+public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex>,Arithmetic<T> {
+    public T real;
+    public T imag;
+    public static final Complex<Double> i = new Complex<>(0.0,1.0);
+    public static final Complex<Double> one = new Complex<>(1.0,0.0);
+    public static final Complex<Double> zero = new Complex<>(0.0,0.0);
+    public static final Complex<Double> half = new Complex<>(0.5,0.0);
+    public static final Number zero2=Double.valueOf(0.0);
+
+    public Complex(T newReal) {
         this.real = newReal;
-        this.imag = 0.0;
+        this.imag = (T) zero2;
     }
     public Complex() {
-        this.real = 0.0;
-        this.imag = 0.0;
+
+        this.real = (T) zero2;
+        this.imag = (T) zero2;
     }
 
-    public Complex(double newReal, double newImag) {
+    public Complex(T newReal, T newImag) {
         this.real = newReal;
         this.imag = newImag;
     }
     public int hashCode() {
         return Objects.hash(real, imag);
     }
-    public Complex plus(Complex other) {
-        return new Complex(this.real + other.real, this.imag + other.imag);
+    public Complex<T> plus(Complex other) {
+        return new Complex(this.real.add((T) other.real), this.imag.add((T) other.imag));
     }
 
-    public Complex minus(Complex other) {
-        return new Complex(this.real - other.real, this.imag - other.imag);
+    public Complex<T> minus(Complex other) {
+        return new Complex(this.real.subtract((T) other.real), this.imag.subtract((T) other.imag));
     }
 
-    public Complex times(Complex other) {
-        return new Complex(
-                this.real * other.real - this.imag * other.imag,
-                this.real * other.imag + this.imag * other.real
+    public Complex<T> times(Complex<T> other) {
+        return new Complex<T>(
+                this.real.multiply((T) other.real).subtract( this.imag.multiply((T) other.imag)),
+                this.real.multiply((T) other.imag).add(this.imag.multiply((T) other.real))
         );
     }
 
-    public Complex div(double other) {
-        if (other == 0) throw new ArithmeticException("Division by zero");
-        return new Complex(this.real / other, this.imag / other);
+    public Complex<T> div(T other) {
+
+        if (other == (T) zero2) throw new ArithmeticException("Division by zero");
+        return new Complex<>(this.real.divide(other), this.imag.divide(other));
     }
 
-    public Complex div(Complex other) {
+    public Complex<T> div(Complex<T> other) {
         if(other == Complex.zero) throw new ArithmeticException("Division by zero");
-        double denominator = other.real * other.real + other.imag * other.imag;
-        if (denominator == 0) throw new ArithmeticException("Division by zero");
-        return this * new Complex(other.real / denominator, -other.imag / denominator);
+        T denominator = other.real.multiply(other.real).add(other.imag.multiply(other.imag));
+        if (denominator == (T) zero2) throw new ArithmeticException("Division by zero");
+        return this * new Complex<T>(other.real.divide(denominator), other.imag.negate().divide(denominator));
     }
 
     public double magnitude() {
-        return Math.sqrt(real * real + imag * imag);
+        return Math.sqrt(real.multiply(real).add(imag.multiply(imag)).doubleVal());
     }
     public double argument()
     {
-        return Math.atan2(imag,real);
+        return Math.atan2(imag.doubleVal(),real.doubleVal());
     }
-    public static Complex pow(Complex a, Complex b)
+    public static Complex<T> pow(Complex a, Complex<T> b)
     {
         try{
             if(a== Complex.zero)
@@ -304,4 +308,48 @@ public class Complex implements ComparableUsing<Complex> {
         }
     }
 
+    @Override
+    public T add(T other) {
+        return null;
+    }
+
+    @Override
+    public T subtract(T other) {
+        return null;
+    }
+
+    @Override
+    public T multiply(T other) {
+        return null;
+    }
+
+    @Override
+    public T divide(T other) {
+        return null;
+    }
+
+    @Override
+    public T remainder(T other) {
+        return null;
+    }
+
+    @Override
+    public T negate() {
+        return null;
+    }
+
+    @Override
+    public Double doubleVal() {
+        return 0.0;
+    }
+
+    @Override
+    public T ln() {
+        return null;
+    }
+
+    @Override
+    public T exp() {
+        return null;
+    }
 }

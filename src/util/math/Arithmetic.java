@@ -11,8 +11,15 @@ public interface Arithmetic<T> {
     public abstract T remainder(T other);
     public abstract T negate();
     public abstract Double doubleVal();
-    public abstract T ln();
-    public abstract T exp();
+    public static <T extends Arithmetic<T>> T exp(T other)
+    {
+        return other.from(Math.exp(other.doubleVal()));
+    }
+    public static <T extends Arithmetic<T>> T ln(T other)
+    {
+        return other.from(Math.log(other.doubleVal()));
+    }
+
     public abstract boolean lt(T other);
     public abstract boolean le(T other);
     public abstract boolean gt(T other);
@@ -26,5 +33,8 @@ public interface Arithmetic<T> {
     public abstract boolean le(Double other);
     public abstract boolean gt(Double other);
     public abstract boolean ge(Double other);
+    public abstract T sqrt();
+    public T from(Double other);
+    public T from(Integer other);
 
 }

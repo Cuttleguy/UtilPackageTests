@@ -6,83 +6,101 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex> {
+public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex<T>>,Arithmetic<T> {
     public T real;
     public T imag;
-    public static final Complex i = new Complex(0.0,1.0);
-    public static final Complex one = new Complex(1.0,0.0);
-    public static final Complex zero = new Complex(0.0,0.0);
-    public static final Complex half = new Complex(0.5,0.0);
+    final Arithmetic<T> test = (Arithmetic<T>) 0.0;
+    public final Complex<T> i = new Complex<>(0.0,1.0);
+    public final Complex<T> one = new Complex<>(1.0,0.0);
+    public final Complex<T> zero = new Complex<>(0.0,0.0);
+    public final Complex<T> half = new Complex<>(0.5,0.0);
     public Complex(double newReal) {
-        this.real = newReal;
-        this.imag = 0.0;
+
+        this.real = test.from(newReal);
+        this.imag = test.from(0.0);
+    }
+    public Complex(T newReal)
+    {
+        this.real=newReal;
+        this.imag = test.from(0.0);
     }
     public Complex() {
-        this.real = 0.0;
-        this.imag = 0.0;
+        this.real = test.from(0.0);
+        this.imag = test.from(0.0);
     }
 
     public Complex(double newReal, double newImag) {
-        this.real = newReal;
-        this.imag = newImag;
+        this.real = test.from(newReal);
+        this.imag = test.from(newImag);
+    }
+    public Complex(T newReal, T newImag)
+    {
+        this.real=newReal;
+        this.imag=newImag;
     }
     public int hashCode() {
         return Objects.hash(real, imag);
     }
-    public Complex plus(Complex other) {
-        return new Complex(this.real + other.real, this.imag + other.imag);
+    public Complex<T> plus(Complex<T> other) {
+        return new Complex<>(this.real.add(other.real), this.imag.add(other.imag));
     }
 
-    public Complex minus(Complex other) {
-        return new Complex(this.real - other.real, this.imag - other.imag);
+
+    public Complex<T> minus(Complex<T> other) {
+        return new Complex<>(this.real.subtract(other.real), this.imag.subtract(other.imag));
     }
 
-    public Complex times(Complex other) {
-        return new Complex(
-                this.real * other.real - this.imag * other.imag,
-                this.real * other.imag + this.imag * other.real
+
+    public Complex<T> times(Complex<T> other) {
+        return new Complex<>(
+                this.real.multiply(other.real).subtract(this.imag.multiply(other.imag)),
+                this.real.multiply(other.imag).add(this.imag.multiply(other.real))
         );
     }
 
-    public Complex div(double other) {
+    public Complex<T> div(double other) {
         if (other == 0) throw new ArithmeticException("Division by zero");
-        return new Complex(this.real / other, this.imag / other);
+        return new Complex<>(this.real.divide(other), this.imag.divide(other));
+    }
+    public Complex<T> div(T other) {
+        if (other == other.from(0.0)) throw new ArithmeticException("Division by zero");
+        return new Complex<>(this.real.divide(other), this.imag.divide(other));
     }
 
-    public Complex div(Complex other) {
-        if(other == Complex.zero) throw new ArithmeticException("Division by zero");
-        double denominator = other.real * other.real + other.imag * other.imag;
-        if (denominator == 0) throw new ArithmeticException("Division by zero");
-        return this * new Complex(other.real / denominator, -other.imag / denominator);
+    public Complex<T> div(Complex<T> other) {
+        if(other == zero) throw new ArithmeticException("Division by zero");
+        T denominator = other.real.multiply(other.real).add(other.imag.multiply(other.imag));
+        if (denominator == test.from(0)) throw new ArithmeticException("Division by zero");
+        return this * other / denominator;
     }
 
-    public double magnitude() {
-        return Math.sqrt(real * real + imag * imag);
+    public T magnitude() {
+        return (real.multiply(real).add(imag.multiply(imag))).sqrt();
     }
-    public double argument()
+    public T argument()
     {
-        return Math.atan2(imag,real);
+        return test.from(Math.atan2(imag.doubleVal(),real.doubleVal()));
     }
-    public static Complex pow(Complex a, Complex b)
+    public static <T extends Arithmetic<T>> Complex<T> pow(Complex<T> a, Complex<T> b)
     {
         try{
-            if(a== Complex.zero)
+            if(a== a.zero)
             {
-                if(b==Complex.zero)
+                if(b==b.zero)
                 {
-                    return Complex.one;
+                    return b.one;
                 }
                 else
                 {
-                    return Complex.zero;
+                    return a.zero;
                 }
-            } else if (b==Complex.zero) {
-                return Complex.one;
+            } else if (b==b.zero) {
+                return b.one;
             }
-            else if(b==Complex.one)
+            else if(b==b.one)
             {
                 return a;
-            } else if (b.imag==0&&b.real%1==0) {
+            } else if (b.imag==&&b.real%1==0) {
                 return Complex.pow(a,Double.valueOf(b.real).intValue());
             }
             double mag = a.magnitude();

@@ -10,10 +10,23 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
     public T real;
     public T imag;
     final Arithmetic<T> test = (Arithmetic<T>) 0.0;
-    public final Complex<T> i = new Complex<>(0.0,1.0);
-    public final Complex<T> one = new Complex<>(1.0,0.0);
-    public final Complex<T> zero = new Complex<>(0.0,0.0);
-    public final Complex<T> half = new Complex<>(0.5,0.0);
+    public static <T extends Arithmetic<T>> Complex<T> i()
+    {
+        return new Complex<>(0.0,1.0);
+    }
+    public static <T extends Arithmetic<T>> Complex<T> one()
+    {
+        return new Complex<>(1.0,0.0);
+    }
+    public static <T extends Arithmetic<T>> Complex<T> zero()
+    {
+        return new Complex<>(0.0,0.0);
+    }
+
+
+//    public final Complex<T> zero = new Complex<>(0.0,0.0);
+//    public final Complex<T> half = new Complex<>(0.5,0.0);
+
     public Class<? extends Arithmetic> getType()
     {
         return real.getClass();
@@ -64,7 +77,7 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
 
     public Complex<T> div(double other) {
         if (other == 0) throw new ArithmeticException("Division by zero");
-        return new Complex<>(this.real.divide(other), this.imag.divide(other));
+        return new Complex<>(this.real.divide(real.from(other)), this.imag.divide(real.from(other)));
     }
     public Complex<T> div(T other) {
         if (other == other.from(0.0)) throw new ArithmeticException("Division by zero");
@@ -72,7 +85,7 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
     }
 
     public Complex<T> div(Complex<T> other) {
-        if(other == zero) throw new ArithmeticException("Division by zero");
+        if(other == Complex.<T>zero()) throw new ArithmeticException("Division by zero");
         T denominator = other.real.multiply(other.real).add(other.imag.multiply(other.imag));
         if (denominator == test.from(0)) throw new ArithmeticException("Division by zero");
         return this * other / denominator;
@@ -88,23 +101,23 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
     public static <T extends Arithmetic<T>> Complex<T> pow(Complex<T> a, Complex<T> b)
     {
         try{
-            if(a== a.zero)
+            if(a== Complex.<T>zero())
             {
-                if(b==b.zero)
+                if(b==Complex.<T>zero())
                 {
-                    return b.one;
+                    return Complex.one();
                 }
                 else
                 {
-                    return a.zero;
+                    return Complex.zero();
                 }
-            } else if (b==b.zero) {
-                return b.one;
+            } else if (b==Complex.<T>zero()) {
+                return Complex.<T>one();
             }
-            else if(b==b.one)
+            else if(b==Complex.<T>one())
             {
                 return a;
-            } else if (b.imag==b.zero&&b.real.remainder(b.real.from(1))==b.real.from(0)) {
+            } else if (b.imag==Complex.<T>zero()&&b.real.remainder(b.real.from(1))==b.real.from(0)) {
                 return Complex.<T>pow(a,b.real.doubleVal().intValue());
             }
             T mag = a.magnitude();
@@ -132,7 +145,7 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
 
     private static <T extends Arithmetic<T>> Complex<T> pow(Complex<T> a, int b)
     {
-        Complex<T> result= a.one;
+        Complex<T> result= Complex.<T>one();
         for (int j = 0; j < b; j++) {
             result*=a;
         }
@@ -154,6 +167,7 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
     {
         if(other instanceof Complex<?>)
         {
+            System.out.println(((Complex<?>) other).imag);
             return equals(other);
         }
         else
@@ -180,9 +194,12 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
     public String toString(){
         T zero2 = test.from(0);
         T one2 = test.from(1);
-        if(imag == imag.from(0))
+        System.out.println(test.from(1.0));
+
+        System.out.println(one2.equals(one2));
+        if(imag.equals(imag.from(0)))
         {
-            if(real.remainder(test.from(1))==test.from(0))
+            if(real.remainder(test.from(1)).equals(test.from(0)))
             {
 
                 return Integer.toString(real.doubleVal().intValue());
@@ -192,19 +209,19 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
                 return real.toString();
             }
 
-        } else if (real==zero2) {
-            if (imag==one2)
+        } else if (real.equals(zero2)) {
+            if (imag.equals(one2))
             {
                 return "i";
             }
-            else if (imag == one2.negate())
+            else if (imag.equals(one2.negate()))
             {
                 return "-i";
             }
             else if(imag.remainder(one2)==zero2)
             {
 
-                return Integer.toString(imag.doubleVal().intValue())+"i";
+                return imag.doubleVal().intValue() +"i";
             }
             else
             {
@@ -293,11 +310,11 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
     public static <T extends Arithmetic<T>> Complex<T> sqrt(Complex<T> other)
     {
 
-        return Complex.root(other,other.one*other.real.from(2));
+        return Complex.root(other,Complex.<T>one()*other.real.from(2));
     }
     public static <T extends Arithmetic<T>> Complex<T> root(Complex<T> other, Complex<T> power)
     {
-        return Complex.pow(other,power.one/power);
+        return Complex.pow(other,Complex.<T>one()/power);
     }
     public static <T extends Arithmetic<T>> Complex<T> cbrt(Complex<T> other)
     {

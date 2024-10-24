@@ -90,15 +90,43 @@ public interface Arithmetic<T> {
     public abstract boolean le(T other);
     public abstract boolean gt(T other);
     public abstract boolean ge(T other);
-    public abstract T add(Double other);
-    public abstract T subtract(Double other);
-    public abstract T multiply(Double other);
-    public abstract T divide(Double other);
-    public abstract T remainder(Double other);
-    public abstract boolean lt(Double other);
-    public abstract boolean le(Double other);
-    public abstract boolean gt(Double other);
-    public abstract boolean ge(Double other);
+//    public default T add(Double other)
+//    {
+//        return this.add(this.from(other));
+//    }
+//
+//    public default T subtract(Double other)
+//    {
+//        return this.subtract(this.from(other));
+//    }
+//    public default T multiply(Double other)
+//    {
+//        return this.multiply(this.from(other));
+//    }
+//    public default T divide(Double other)
+//    {
+//        return this.divide(this.from(other));
+//    }
+//    public default T remainder(Double other)
+//    {
+//        return this.remainder(this.from(other));
+//    }
+//    public default boolean lt(Double other)
+//    {
+//        return this.lt(this.from(other));
+//    }
+//    public default boolean le(Double other)
+//    {
+//        return this.le(this.from(other));
+//    }
+//    public default boolean gt(Double other)
+//    {
+//        return this.gt(this.from(other));
+//    }
+//    public default boolean ge(Double other)
+//    {
+//        return this.ge(this.from(other));
+//    }
     public abstract T sqrt();
     public abstract T from(Double other);
     public abstract T from(Integer other);

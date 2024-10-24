@@ -33,7 +33,7 @@ public abstract class DoubleExtension implements Arithmetic<Double>{
     return -thiz;
   }
   public static Double doubleVal(@This Double thiz) {
-    return -thiz;
+    return thiz;
   }
 
   public static boolean lt(@This Double thiz, Double other){return thiz<other;}
@@ -41,8 +41,10 @@ public abstract class DoubleExtension implements Arithmetic<Double>{
   public static boolean gt(@This Double thiz, Double other){return thiz>other;}
   public static boolean ge(@This Double thiz, Double other){return thiz>=other;}
   public static Double from(@This Double thiz, Double value){
+
     return value;
   }
+
   public static Double from(@This Double thiz, Integer value){
     return value.doubleValue();
   }
@@ -54,6 +56,7 @@ public abstract class DoubleExtension implements Arithmetic<Double>{
 
 //  public static String toString(@This Double thiz)
 //  {
+//    System.out.println(thiz);
 //    return Double.toString(thiz);
 //  }
   public static Double sin(@This Double thiz, Double other)

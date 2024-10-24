@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex<T>>,Arithmetic<T> {
+public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex<T>> {
     public T real;
     public T imag;
     final Arithmetic<T> test = (Arithmetic<T>) 0.0;
@@ -14,6 +14,10 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
     public final Complex<T> one = new Complex<>(1.0,0.0);
     public final Complex<T> zero = new Complex<>(0.0,0.0);
     public final Complex<T> half = new Complex<>(0.5,0.0);
+    public Class<? extends Arithmetic> getType()
+    {
+        return real.getClass();
+    }
     public Complex(double newReal) {
 
         this.real = test.from(newReal);
@@ -100,16 +104,24 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
             else if(b==b.one)
             {
                 return a;
-            } else if (b.imag==&&b.real%1==0) {
-                return Complex.pow(a,Double.valueOf(b.real).intValue());
+            } else if (b.imag==b.zero&&b.real.remainder(b.real.from(1))==b.real.from(0)) {
+                return Complex.<T>pow(a,b.real.doubleVal().intValue());
             }
-            double mag = a.magnitude();
-            double arg = a.argument();
-            double log_mag=Math.log(mag);
-            Complex log_a=new Complex(log_mag,arg);
-            Complex b_log_a=log_a*b;
-            double e_real=Math.exp(b_log_a.real);
-            return round(new Complex(e_real*Math.cos(b_log_a.imag),e_real*Math.sin(b_log_a.imag)),10);
+            T mag = a.magnitude();
+            T arg = a.argument();
+            T log_mag=a.real.ln(mag);
+            Complex<T> log_a=new Complex<>(log_mag,arg);
+            Complex<T> b_log_a=log_a*b;
+            T e_real=a.real.exp(b_log_a.real);
+            if(a.getType()==Double.class)
+            {
+                return round(new Complex<T>(e_real.multiply(a.real.cos(b_log_a.imag)),e_real.multiply(a.real.sin(b_log_a.imag))),10);
+            }
+            else
+            {
+                return new Complex<>(e_real.multiply(a.real.cos(b_log_a.imag)),e_real.multiply(a.real.sin(b_log_a.imag)));
+            }
+
         }
         catch(RuntimeException e)
         {
@@ -118,9 +130,9 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
 
     }
 
-    private static Complex pow(Complex a, int b)
+    private static <T extends Arithmetic<T>> Complex<T> pow(Complex<T> a, int b)
     {
-        Complex result= Complex.one;
+        Complex<T> result= a.one;
         for (int j = 0; j < b; j++) {
             result*=a;
         }
@@ -129,181 +141,204 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
 
     }
 
-    public static Complex round(Complex c,int digits)
+    public static <T extends Arithmetic<T>> Complex<T> round(Complex<T> c,int digits)
     {
-        return new Complex(MathUtil.round(c.real,digits),MathUtil.round(c.imag,digits));
+        return new Complex<>(MathUtil.round(c.real.doubleVal(),digits),MathUtil.round(c.imag.doubleVal(),digits));
     }
-    public boolean equals(Complex other)
+    public boolean equals(Complex<T> other)
     {
         return real==other.real && imag==other.imag;
     }
+    @Override
+    public boolean equals(Object other)
+    {
+        if(other instanceof Complex<?>)
+        {
+            return equals(other);
+        }
+        else
+        {
+            throw new RuntimeException("Complex compared to "+other.getClass());
+        }
+    }
 
-    public Complex conjugate()
+
+    public Complex<T> conjugate()
     {
         return new Complex(
-                real,-imag
+                real,imag.negate()
         );
     }
-    public Complex unaryMinus()
+    public Complex<T> unaryMinus()
     {
-        return new Complex(
-                -real,-imag
+        return new Complex<T>(
+                real.negate(),imag.negate()
         );
     }
 
 
     public String toString(){
-        if(imag == 0.0)
+        T zero2 = test.from(0);
+        T one2 = test.from(1);
+        if(imag == imag.from(0))
         {
-            if(real%1.0==0)
+            if(real.remainder(test.from(1))==test.from(0))
             {
 
-                return Integer.toString(Math.round(Double.valueOf(real).floatValue()));
+                return Integer.toString(real.doubleVal().intValue());
             }
             else
             {
-                return Double.toString(real);
+                return real.toString();
             }
 
-        } else if (real==0.0) {
-            if (imag==1.0)
+        } else if (real==zero2) {
+            if (imag==one2)
             {
                 return "i";
             }
-            else if (imag == -1)
+            else if (imag == one2.negate())
             {
                 return "-i";
             }
-            else if(imag%1.0==0)
+            else if(imag.remainder(one2)==zero2)
             {
 
-                return Integer.toString(Math.round(Double.valueOf(imag).floatValue()))+"i";
+                return Integer.toString(imag.doubleVal().intValue())+"i";
             }
             else
             {
-                return Double.toString(imag)+"i";
+                return imag.toString()+"i";
             }
-        } else if (imag==1.0) {
-            if(real%1.0==0)
+        } else if (imag==one2) {
+            if(real.remainder(one2)==zero2)
             {
 
-                return Integer.toString(Math.round(Double.valueOf(real).floatValue()))+" + i";
+                return Integer.toString(real.doubleVal().intValue())+" + i";
             }
             else
             {
-                return Double.toString(real)+" + i";
+                return real.toString()+" + i";
             }
         }
-        else if(imag==-1.0)
+        else if(imag==one2.negate())
         {
-            if(real%1.0==0)
+            if(real.remainder(one2)==zero2)
             {
 
-                return Integer.toString(Math.round(Double.valueOf(real).floatValue()))+" - i";
+                return Integer.toString(real.doubleVal().intValue())+" - i";
             }
             else
             {
-                return Double.toString(real)+" - i";
+                return real.toString()+" - i";
             }
-        } else if (imag<0.0) {
+        } else if (imag.lt(zero2)) {
             String realStr;
-            if(real%1.0==0)
+            if(real.remainder(one2)==zero2)
             {
 
-                realStr= Integer.toString(Math.round(Double.valueOf(real).floatValue()));
+                realStr= Integer.toString(real.doubleVal().intValue());
             }
             else
             {
-                realStr= Double.toString(real);
+                realStr= real.toString();
             }
             String imagStr;
-            if(imag==1.0)
+            if(imag==one2)
             {
                 imagStr = "";
-            } else if (imag==-1.0) {
-                imagStr = "-";
-            } else if(imag%1.0==0)
+            } else if (imag==one2.negate()) {
+                imagStr = "";
+            } else if(imag.remainder(one2)==zero2)
             {
 
-                imagStr= Integer.toString(Math.round(Double.valueOf(Math.abs(imag)).floatValue()));
+                imagStr= " -"+Integer.toString(imag.doubleVal().intValue());
             }
             else
             {
-                imagStr= Double.toString(Math.abs(imag));
+                imagStr= " "+imag.toString();
             }
 
-            return realStr+" - "+imagStr+"i";
+            return realStr+imagStr+"i";
         } else {
             String realStr;
-            if(real%1.0==0)
+            if(real.remainder(real.from(1))==real.from(0))
             {
 
-                realStr= Integer.toString(Math.round(Double.valueOf(real).floatValue()));
+                realStr= Integer.toString(real.doubleVal().intValue());
             }
             else
             {
-                realStr= Double.toString(real);
+                realStr= real.toString();
             }
             String imagStr;
-            if(real%1.0==0)
+            if(real.remainder(one2)==zero2)
             {
 
-                imagStr= Integer.toString(Math.round(Double.valueOf(imag).floatValue()));
+                imagStr= Integer.toString(imag.doubleVal().intValue());
             }
             else
             {
-                imagStr= Double.toString(imag);
+                imagStr= imag.toString();
             }
 
             return realStr+" + "+imagStr+"i";
         }
 
     }
-    public Complex times(double other)
+    public Complex<T> times(T other)
     {
-        return new Complex(real*other,imag*other);
+        return new Complex<>(real.multiply(other),imag.multiply(other));
     }
-    public static Complex sqrt(Complex other)
+    public static <T extends Arithmetic<T>> Complex<T> sqrt(Complex<T> other)
     {
 
-        return Complex.root(other,2*one);
+        return Complex.root(other,other.one*other.real.from(2));
     }
-    public static Complex root(Complex other, Complex power)
+    public static <T extends Arithmetic<T>> Complex<T> root(Complex<T> other, Complex<T> power)
     {
-        return Complex.pow(other,one/power);
+        return Complex.pow(other,power.one/power);
     }
-    public static Complex cbrt(Complex other)
+    public static <T extends Arithmetic<T>> Complex<T> cbrt(Complex<T> other)
     {
-        return Complex.root(other,new Complex(3));
+        return Complex.<T>root(other,new Complex<T>(3));
     }
-    public static Complex exp(Complex other)
+    public static <T extends Arithmetic<T>> Complex<T> exp(Complex<T> other)
     {
-        return round(Math.exp(other.real)*new Complex(Math.cos(other.imag),Math.sin(other.imag)),10);
+        if(other.real instanceof Double)
+        {
+            return round(other.test.exp(other.real)*new Complex<T>(other.test.cos(other.imag),other.test.sin(other.imag)),10);
+        }
+        else
+        {
+            return other.test.exp(other.real)*new Complex<T>(other.test.cos(other.imag),other.test.sin(other.imag));
+        }
+
     }
-    public static List<Complex> rootsOfUnity(int power)
+    public static <T extends Arithmetic<T>>List<Complex<T>> rootsOfUnity(int power)
     {
-        List<Complex> roots = new ArrayList<>();
+        List<Complex<T>> roots = new ArrayList<>();
         for (int j = 0; j < power; j++) {
-            roots.add(exp(new Complex(0,2*Math.PI*j/power)));
+            roots.add(exp(new Complex<T>(0,2*Math.PI*j/power)));
         }
         return roots;
     }
 
 
     @Override
-    public int compareTo(Complex other) {
+    public int compareTo(Complex<T> other) {
 
         if(this.real!=other.real)
         {
-            return (int) Math.round(this.real-other.real);
+            return (int) Math.round(this.real.subtract(other.real).doubleVal());
         }
         else
         {
-            return (int) Math.round(this.imag - other.imag);
+            return (int) Math.round(this.imag.subtract(other.imag).doubleVal());
         }
     }
     @Override
-    public boolean compareToUsing(Complex other,Operator op)
+    public boolean compareToUsing(Complex<T> other,Operator op)
     {
         int result = compareTo(other);
         if(op==Operator.EQ)
@@ -322,4 +357,139 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
         }
     }
 
+
+//    @Override
+//    public Complex<T> add(Complex<T> other) {
+//        return this+other;
+//    }
+//
+//    @Override
+//    public Complex<T> subtract(Complex<T> other) {
+//        return this-other;
+//    }
+//
+//    @Override
+//    public Complex<T> multiply(Complex<T> other) {
+//        return this*other;
+//    }
+//
+//    @Override
+//    public Complex<T> divide(Complex<T> other) {
+//        return this/other;
+//    }
+//
+//    @Override
+//    public Complex<T> remainder(Complex<T> other) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Complex<T> negate() {
+//        return -this;
+//    }
+//
+//    @Override
+//    public Double doubleVal() {
+//        return real.doubleVal();
+//    }
+//
+//    @Override
+//    public boolean lt(Complex<T> other) {
+//        return compareToUsing(other,Operator.LT);
+//    }
+//
+//    @Override
+//    public boolean le(Complex<T> other) {
+//        return compareToUsing(other,Operator.LE);
+//    }
+//
+//    @Override
+//    public boolean gt(Complex<T> other) {
+//        return compareToUsing(other,Operator.GT);
+//    }
+//
+//    @Override
+//    public boolean ge(Complex<T> other) {
+//        return compareToUsing(other,Operator.GE);
+//    }
+//
+//    @Override
+//    public Complex<T> add(Double other) {
+//        return this+new Complex<T>(other);
+//    }
+//
+//    @Override
+//    public Complex<T> subtract(Double other) {
+//        return this-new Complex<T>(other);
+//
+//    }
+//
+//    @Override
+//    public Complex<T> multiply(Double other) {
+//        return this*new Complex<T>(other);
+//
+//    }
+//
+//    @Override
+//    public Complex<T> divide(Double other) {
+//        return this/other;
+//
+//    }
+//
+//    @Override
+//    public Complex<T> remainder(Double other) {
+//        return null;
+//    }
+//
+//    @Override
+//    public boolean lt(Double other) {
+//        return compareToUsing(new Complex<>(other),Operator.LT);
+//    }
+//
+//    @Override
+//    public boolean le(Double other) {
+//        return compareToUsing(new Complex<>(other),Operator.LE);
+//    }
+//
+//    @Override
+//    public boolean gt(Double other) {
+//        return compareToUsing(new Complex<>(other),Operator.GT);
+//    }
+//
+//    @Override
+//    public boolean ge(Double other) {
+//        return compareToUsing(new Complex<>(other),Operator.GE);
+//    }
+//
+//    @Override
+//    public Complex<T> sqrt() {
+//        return Complex.<T>sqrt(this);
+//    }
+//
+//    @Override
+//    public Complex<T> from(Double other) {
+//        return new Complex<>(other);
+//    }
+//
+//    @Override
+//    public Complex<T> from(Integer other) {
+//        return new Complex<>(other);
+//    }
+//
+//
+//    public Complex<T> expSpec(Complex other1) {
+//        return T.exp(other1);
+//    }
+//
+//    public Complex<T> logSpec(Complex other1) {
+//        return T.ln(other1);
+//    }
+//
+//    public Complex<T> cosSpec(Complex other1) {
+//        return T.cos(other1);
+//    }
+//
+//    public Complex<T> sinSpec(Complex other1) {
+//        return T.sin(other1);
+//    }
 }

@@ -1,5 +1,6 @@
 package UtilPackageTests.extensions.java.lang.Double;
 
+import manifold.ext.rt.api.ComparableUsing;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 import util.math.Arithmetic;
@@ -7,7 +8,7 @@ import util.math.Arithmetic;
 import java.lang.Double;
 
 @Extension
-public abstract class DoubleExtension implements Arithmetic<Double> {
+public abstract class DoubleExtension implements Arithmetic<Double>{
   public static void helloWorld(@This Double thiz) {
     System.out.println("hello world!");
   }
@@ -42,13 +43,37 @@ public abstract class DoubleExtension implements Arithmetic<Double> {
   public static Double from(@This Double thiz, Double value){
     return value;
   }
-  public static Integer from(@This Double thiz, Integer value){
-    return value;
+  public static Double from(@This Double thiz, Integer value){
+    return value.doubleValue();
   }
   public static Double sqrt(@This Double thiz)
   {
     return Math.sqrt(thiz);
   }
+
+
+//  public static String toString(@This Double thiz)
+//  {
+//    return Double.toString(thiz);
+//  }
+  public static Double sin(@This Double thiz, Double other)
+  {
+    return Math.sin(other);
+  }
+  public static Double cos(@This Double thiz, Double other)
+  {
+    return Math.cos(other);
+  }
+  public static Double exp(@This Double thiz, Double other)
+  {
+    return Math.exp(other);
+  }
+  public static Double ln(@This Double thiz, Double other)
+  {
+    return Math.log(other);
+  }
+
+
 
 
 }

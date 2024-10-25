@@ -260,6 +260,12 @@ public final class MathUtil {
 //        toReturn.append(string[string.length()-1]);
 //        return toReturn.toString();
 //    }
+public static long findGCD(long a, long b) {
+    if (b == 0) {
+        return a;
+    }
+    return findGCD(b, a % b);
+}
 }
 
 

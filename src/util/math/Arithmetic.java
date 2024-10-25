@@ -82,10 +82,22 @@ public interface Arithmetic<T> {
 //    public abstract T exp();
 //    public abstract T cos();
 //    public abstract T sin();
+    // Trig Functions
     public abstract T ln(T other);
     public abstract T exp(T other);
     public abstract T cos(T other);
     public abstract T sin(T other);
+    public abstract T cosh(T other);
+    public abstract T sinh(T other);
+    public abstract T sec(T other);
+    public abstract T csc(T other);
+    public abstract T tan(T other);
+    public abstract T tanh(T other);
+    public abstract T cot(T other);
+    public abstract T coth(T other);
+    public abstract T sech(T other);
+    public abstract T csch(T other);
+    // Comparisons
     public abstract boolean lt(T other);
     public abstract boolean le(T other);
     public abstract boolean gt(T other);

@@ -9,9 +9,6 @@ import java.lang.Double;
 
 @Extension
 public abstract class DoubleExtension implements Arithmetic<Double>{
-  public static void helloWorld(@This Double thiz) {
-    System.out.println("hello world!");
-  }
 
 
   public static Double add(@This Double thiz,Double other) {
@@ -27,6 +24,10 @@ public abstract class DoubleExtension implements Arithmetic<Double>{
     return thiz/other;
   }
   public static Double remainder(@This Double thiz,Double other) {
+    if(thiz%other==-0.0)
+    {
+      return 0.0;
+    }
     return thiz%other;
   }
   public static Double negate(@This Double thiz) {
@@ -67,6 +68,47 @@ public abstract class DoubleExtension implements Arithmetic<Double>{
   {
     return Math.cos(other);
   }
+  public static Double sinh(@This Double thiz, Double other)
+  {
+    return Math.sinh(other);
+  }
+  public static Double cosh(@This Double thiz, Double other)
+  {
+    return Math.cosh(other);
+  }
+  public static Double sec(@This Double thiz, Double other)
+  {
+    return 1/Math.cos(other);
+  }
+  public static Double csc(@This Double thiz, Double other)
+  {
+    return 1/Math.sin(other);
+  }
+  public static Double tan(@This Double thiz, Double other)
+  {
+    return Math.tan(other);
+  }
+  public static Double tanh(@This Double thiz, Double other)
+  {
+    return Math.tanh(other);
+  }
+  public static Double sech(@This Double thiz, Double other)
+  {
+    return 1/Math.cosh(other);
+  }
+  public static Double csch(@This Double thiz, Double other)
+  {
+    return 1/Math.sinh(other);
+  }
+  public static Double cot(@This Double thiz, Double other)
+  {
+    return 1/Math.tan(other);
+  }
+  public static Double coth(@This Double thiz, Double other)
+  {
+    return 1/Math.tanh(other);
+  }
+
   public static Double exp(@This Double thiz, Double other)
   {
     return Math.exp(other);

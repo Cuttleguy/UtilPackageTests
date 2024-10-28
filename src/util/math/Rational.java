@@ -21,12 +21,9 @@ public class Rational<T extends Arithmetic<T>> implements Arithmetic<Rational<T>
             throw new RuntimeException("Cannot Divide By Zero");
         }
         denominator=newDenominator;
-        if(Objects.equals(test.remainder(test.from(1.0)),test.from(0.0)))
-        {
-            Integer gcd = Long.valueOf(findGCD(numerator.doubleVal().longValue(),denominator.doubleVal().longValue())).intValue();
-            numerator=numerator.divide(test.from(gcd));
-            denominator=denominator.divide(test.from(gcd));
-        }
+        T gcd = test.gcf(numerator,denominator);
+        numerator=numerator.divide(gcd);
+        denominator=denominator.divide(gcd);
 
 
     }
@@ -238,6 +235,8 @@ public class Rational<T extends Arithmetic<T>> implements Arithmetic<Rational<T>
     public Rational<T> from(Integer other) {
         return new Rational<>(test.from(other));
     }
+
+
 
 //    public Polynomial numerator;
 //    public Polynomial denominator;

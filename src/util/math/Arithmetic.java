@@ -3,8 +3,10 @@ package util.math;
 import manifold.ext.rt.api.ComparableUsing;
 import manifold.ext.rt.api.Structural;
 
+import java.util.Objects;
+
 @Structural
-public interface Arithmetic<T> {
+public interface Arithmetic<T extends Arithmetic<T>>{
     public abstract T add(T other);
     public abstract T subtract(T other);
     public abstract T multiply(T other);
@@ -143,4 +145,18 @@ public interface Arithmetic<T> {
     public abstract T from(Double other);
     public abstract T from(Integer other);
     public abstract boolean equals(Object other);
+    public default T gcf(T input,T other) throws CloneNotSupportedException
+    {
+        if(Objects.equals(other,from(0)))
+        {
+            return input;
+        }
+        else
+        {
+
+            return gcf(other,input.remainder(other));
+        }
+
+    }
+
 }

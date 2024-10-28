@@ -320,6 +320,8 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
     }
 
 
+
+
     public Complex<T> conjugate()
     {
         return new Complex(

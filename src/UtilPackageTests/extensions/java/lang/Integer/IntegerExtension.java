@@ -5,6 +5,7 @@ import manifold.ext.rt.api.This;
 import util.math.Arithmetic;
 
 import java.lang.Integer;
+import java.util.Objects;
 
 @Extension
 public abstract class IntegerExtension implements Arithmetic<Integer> {
@@ -110,5 +111,26 @@ public abstract class IntegerExtension implements Arithmetic<Integer> {
   public static Double doubleVal(@This Integer thiz)
   {
     return thiz.doubleValue();
+  }
+  public static Integer gcf(@This Integer thiz, Integer input,Integer other)
+  {
+    if(Objects.equals(other,0))
+    {
+      return input;
+    }
+    else
+    {
+
+      return thiz.gcf(other,input.remainder(other));
+    }
+
+  }
+  public static Integer lcm( @ This Integer thiz,Integer input,Integer other)
+  {
+    return input.multiply(other).divide(thiz.gcf(input,other));
+  }
+  public static Integer pow(@This Integer thiz, Integer input, Integer other)
+  {
+    return  Double.valueOf(Math.pow(input,other)).intValue();
   }
 }

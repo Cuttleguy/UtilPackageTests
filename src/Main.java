@@ -6,7 +6,7 @@ public class Main {
     {
         Double a=6.0;
         Double b=3.0;
-        System.out.println(new Rational<Double>(a,b));
+
     }
 
 

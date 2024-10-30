@@ -3,14 +3,14 @@ package util.math;
 import manifold.ext.rt.api.ComparableUsing;
 import manifold.ext.rt.api.Structural;
 
+import java.nio.channels.MulticastChannel;
 import java.util.Objects;
 
 @Structural
-public interface Arithmetic<T extends Arithmetic<T>>{
+public interface Arithmetic<T extends Arithmetic<T>> extends Multipliable<T>,Dividable<T> {
     public abstract T add(T other);
     public abstract T subtract(T other);
-    public abstract T multiply(T other);
-    public abstract T divide(T other);
+
     public abstract T remainder(T other);
     public abstract T negate();
     public abstract Double doubleVal();
@@ -145,7 +145,7 @@ public interface Arithmetic<T extends Arithmetic<T>>{
     public abstract T from(Double other);
     public abstract T from(Integer other);
     public abstract boolean equals(Object other);
-    public default T gcf(T input,T other) throws CloneNotSupportedException
+    public default T gcf(T input,T other)
     {
         if(Objects.equals(other,from(0)))
         {
@@ -158,5 +158,11 @@ public interface Arithmetic<T extends Arithmetic<T>>{
         }
 
     }
+    public default T lcm(T input,T other)
+    {
+        return input.multiply(other).divide(gcf(input,other));
+    }
+//    public T pow(T input,int other);
+
 
 }

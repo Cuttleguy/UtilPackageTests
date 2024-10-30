@@ -6,6 +6,7 @@ import manifold.ext.rt.api.This;
 import util.math.Arithmetic;
 
 import java.lang.Double;
+import java.util.Objects;
 
 @Extension
 public abstract class DoubleExtension implements Arithmetic<Double>{
@@ -116,6 +117,27 @@ public abstract class DoubleExtension implements Arithmetic<Double>{
   public static Double ln(@This Double thiz, Double other)
   {
     return Math.log(other);
+  }
+  public static Double gcf(@This Double thiz, Double input,Double other)
+  {
+    if(Objects.equals(other,0.0))
+    {
+      return input;
+    }
+    else
+    {
+
+      return thiz.gcf(other,input.remainder(other));
+    }
+
+  }
+  public static Double lcm( @ This Double thiz,Double input,Double other)
+  {
+    return input.multiply(other).divide(thiz.gcf(input,other));
+  }
+  public static Double pow(@This Double thiz, Double input, Integer other)
+  {
+    return Math.pow(input,other);
   }
 
 

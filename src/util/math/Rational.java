@@ -27,6 +27,12 @@ public class Rational<T extends Arithmetic<T>> implements Arithmetic<Rational<T>
 
 
     }
+    public Rational()
+    {
+        Complex<T> tComplex = new Complex<>();
+        numerator=tComplex.real.from(1);
+        denominator=tComplex.real.from(1);
+    }
     public Rational(T newNumerator)
     {
 
@@ -235,6 +241,8 @@ public class Rational<T extends Arithmetic<T>> implements Arithmetic<Rational<T>
     public Rational<T> from(Integer other) {
         return new Rational<>(test.from(other));
     }
+
+
 
 
 

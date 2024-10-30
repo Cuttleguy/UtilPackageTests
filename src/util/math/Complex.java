@@ -117,9 +117,10 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
             else if(b==Complex.<T>one())
             {
                 return a;
-            } else if (b.imag==Complex.<T>zero()&&b.real.remainder(b.real.from(1))==b.real.from(0)) {
-                return Complex.<T>pow(a,b.real.doubleVal().intValue());
             }
+//            else if (b.imag==Complex.<T>zero()&&b.real.remainder(b.real.from(1))==b.real.from(0)) {
+//                return Complex.zero().pow(a,b.real.doubleVal().intValue());
+//            }
             T mag = a.magnitude();
             T arg = a.argument();
             T log_mag=a.real.ln(mag);
@@ -143,16 +144,16 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
 
     }
 
-    private static <T extends Arithmetic<T>> Complex<T> pow(Complex<T> a, int b)
-    {
-        Complex<T> result= Complex.<T>one();
-        for (int j = 0; j < b; j++) {
-            result*=a;
-        }
-
-        return result;
-
-    }
+//    private static <T extends Arithmetic<T>> Complex<T> pow(Complex<T> a, int b)
+//    {
+//        Complex<T> result= Complex.<T>one();
+//        for (int j = 0; j < b; j++) {
+//            result*=a;
+//        }
+//
+//        return result;
+//
+//    }
 
     public static <T extends Arithmetic<T>> Complex<T> round(Complex<T> c,int digits)
     {
@@ -319,7 +320,10 @@ public class Complex<T extends Arithmetic<T>> implements ComparableUsing<Complex
         }
     }
 
-
+    @Override
+    public Complex<T> pow(Complex<T> input, int other) {
+        return pow(input,new Complex<>(other));
+    }
 
 
     public Complex<T> conjugate()
